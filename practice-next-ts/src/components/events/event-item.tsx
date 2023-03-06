@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { PostEvent } from '../../types'
+import { PostEvent } from '../../../types'
 import classes from './event-item.module.css'
 import Button from '../ui/button'
 import DateIcon from '../icons/date-icon'

@@ -1,7 +1,7 @@
 import { FC } from 'react'
-import { PostEvent } from '../../types'
+import { PostEvent } from '../../../types'
 import EventItem from './event-item'
-import classes from  './event-list.module.css';
+import classes from './event-list.module.css';
 
 const EventList: FC<{items: PostEvent[]}> = ({items}) => {
     return (

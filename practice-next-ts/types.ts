@@ -7,3 +7,4 @@ export type PostEvent = {
     image: string,
     isFeatured: boolean
 }
+
