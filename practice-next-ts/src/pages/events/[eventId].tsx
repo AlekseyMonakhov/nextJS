@@ -13,17 +13,13 @@ const EventPage = () => {
 
     if (!ev) {
         return <p>No event</p>;
-    };
+    }
 
     return (
         <>
             <EventSummary title={ev.title} />
-            <EventLogistics
-                date={ev.date}
-                address={ev.location}
-                image={ev.image}
-                imageAlt={ev.title}
-            />
+            <EventLogistics date={ev.date} address={ev.location} image={ev.image}
+                            imageAlt={ev.title} />
             <EventContent>
                 <p>{ev.description}</p>
             </EventContent>

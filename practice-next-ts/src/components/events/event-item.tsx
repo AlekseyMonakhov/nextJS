@@ -1,10 +1,10 @@
-import { FC } from 'react'
-import { PostEvent } from '../../../types'
-import classes from './event-item.module.css'
-import Button from '../ui/button'
-import DateIcon from '../icons/date-icon'
-import AddressIcon from '../icons/address-icon'
-import ArrowRightIcon from '../icons/arrow-right-icon'
+import { FC } from 'react';
+import { PostEvent } from '../../../types';
+import classes from './event-item.module.css';
+import Button from '../ui/button';
+import DateIcon from '../icons/date-icon';
+import AddressIcon from '../icons/address-icon';
+import ArrowRightIcon from '../icons/arrow-right-icon';
 
 const EventItem: FC<PostEvent> = ({
                                       title,
@@ -18,11 +18,11 @@ const EventItem: FC<PostEvent> = ({
         day: 'numeric',
         month: 'long',
         year: 'numeric',
-    })
+    });
 
-    const formatAddress = location.replace(', ', "\n'")
+    const formatAddress = location.replace(', ', "\n'");
 
-    const exploreLink = `/events/${id}`
+    const exploreLink = `/events/${id}`;
 
     return (
         <li className={classes.item}>
@@ -49,7 +49,7 @@ const EventItem: FC<PostEvent> = ({
                 </div>
             </div>
         </li>
-    )
-}
+    );
+};
 
 export default EventItem
