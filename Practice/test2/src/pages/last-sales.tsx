@@ -32,7 +32,7 @@ const LastSalesPage: FC<{ sales: Order[] }> = ({ sales }) => {
         data: orders,
         error,
         isLoading,
-    } = useSWR('https://next-js-56c6a-default-rtdb.firebaseio.com/sales.json', getSalesData);
+    } = useSWR('https://next-js-56c6a-default-rtdb.firebaseio.com/sales.', getSalesData);
     // useEffect(() => { fetch('https://next-js-56c6a-default-rtdb.firebaseio.com/sales.json')
     //         .then((resp) => resp.json())
     //         .then((data: { [key: string]: { username: string; volume: string } }) => {

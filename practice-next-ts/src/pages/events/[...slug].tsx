@@ -54,7 +54,7 @@ const FilteredEventsPage = () => {
 
     return (
         <>
-            <ResultsTitle date={date} />
+                <ResultsTitle date={date} />
             <EventList items={filteredEvents} />
         </>
     );
