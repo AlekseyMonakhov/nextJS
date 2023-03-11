@@ -2,13 +2,17 @@ import EventSummary from '../../components/event-detail/event-summary';
 import EventLogistics from '../../components/event-detail/event-logistics';
 import EventContent from '../../components/event-detail/event-content';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import getAllEvents from '@/API/getAllEvents';
+import { getEventById, getFeaturedEvents } from '@/API/getAllEvents';
 import { PostEvent } from '../../../types';
 import { FC } from 'react';
 
 const EventPage: FC<{ loadedEvent: PostEvent }> = ({ loadedEvent }) => {
     if (!loadedEvent) {
-        return <p>No event</p>;
+        return (
+            <div className={'center'}>
+                <p>No event</p>
+            </div>
+        );
     }
 
     return (
@@ -31,15 +35,9 @@ export default EventPage;
 
 export const getStaticProps: GetStaticProps<{ loadedEvent: PostEvent }> = async (context) => {
     const { params } = context;
-    const eventId = params!.eventId;
+    const eventId = params?.eventId;
 
-    const events = await getAllEvents();
-    if (!events) {
-        return {
-            notFound: true,
-        };
-    }
-    const event = events.find((ev) => ev.id === eventId);
+    const event = await getEventById(eventId as string);
 
     if (!event) {
         return {
@@ -51,11 +49,12 @@ export const getStaticProps: GetStaticProps<{ loadedEvent: PostEvent }> = async 
         props: {
             loadedEvent: event,
         },
+        revalidate: 30,
     };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    const events = await getAllEvents();
+    const events = await getFeaturedEvents();
     const eventsPaths = events.map((ev) => ({ params: { eventId: ev.id } }));
 
     return {

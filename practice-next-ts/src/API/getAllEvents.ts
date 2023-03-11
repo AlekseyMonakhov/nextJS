@@ -11,27 +11,37 @@ type Re = {
     };
 };
 
+export async function getAllEvents() {
+    const eventsJson = await fetch('https://next-js-56c6a-default-rtdb.firebaseio.com/events.json');
+    const events: Re = await eventsJson.json();
 
-export default function () {
-    return fetch('https://next-js-56c6a-default-rtdb.firebaseio.com/events.json')
-        .then((res) => res.json())
-        .then((data: Re) => {
-            const formatDate: PostEvent[] = [];
+    const formatDate: PostEvent[] = [];
 
-            for (const key in data) {
-                formatDate.push({
-                    id: key,
-                    isFeatured: data[key].isFeatured,
-                    date: data[key].date,
-                    description: data[key].description,
-                    image: data[key].image,
-                    location: data[key].location,
-                    title: data[key].title,
-                });
-            }
-            return formatDate;
-        })
-        .catch((err) => {
-            throw err;
+    for (const key in events) {
+        formatDate.push({
+            id: key,
+            ...events[key],
         });
+    }
+    return formatDate;
+}
+
+export async function getFeaturedEvents() {
+    const allEvents = await getAllEvents();
+    return allEvents.filter((ev) => ev.isFeatured);
+}
+
+export async function getEventById(id: string) {
+    const allEvents = await getAllEvents();
+    return allEvents.find((ev) => ev.id === id);
+}
+
+export async function getFilteredEvents({ year, month }: { year: number; month: number }) {
+    const allEvents = await getAllEvents();
+    const filteredEvents = allEvents.filter((event) => {
+        const eventDate = new Date(event.date);
+        return eventDate.getFullYear() === year && eventDate.getMonth() === month - 1;
+    });
+
+    return filteredEvents;
 }

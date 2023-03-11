@@ -1,28 +1,22 @@
 import { useRouter } from 'next/router';
-import { getFilteredEvents } from '../../../dummy-data';
+import { getFilteredEvents } from '../../../src/API/getAllEvents';
 import EventList from '../../components/events/event-list';
 import ResultsTitle from '../../components/events/results-title';
 import Button from '../../components/ui/button';
 import ErrorAlert from '@/components/ui/error-alert';
+import { GetServerSideProps } from 'next';
+import { FC } from 'react';
+import { PostEvent } from '../../../types';
 
-const FilteredEventsPage = () => {
-    const {
-        query: { slug },
-    } = useRouter();
+type FilteredPageProps = {
+    hasError?: boolean;
+    events?: PostEvent[];
+    yearMonth?: [number, number];
+};
 
-    if (!slug) {
-        return <p className={'center'}>Loading...</p>;
-    }
+const FilteredEventsPage: FC<FilteredPageProps> = ({ hasError, events,yearMonth }) => {
 
-    const [year, month] = slug;
-
-    if (
-        +isNaN(+year) ||
-        isNaN(+month) ||
-        slug.length > 2 ||
-        +year > 2030 ||
-        +month > 12
-    ) {
+    if (hasError) {
         return (
             <>
                 <ErrorAlert>
@@ -35,9 +29,7 @@ const FilteredEventsPage = () => {
         );
     }
 
-    const filteredEvents = getFilteredEvents({ year: +year, month: +month });
-
-    if (!filteredEvents || filteredEvents.length === 0) {
+    if (!events || events.length === 0) {
         return (
             <>
                 <ErrorAlert>
@@ -49,15 +41,42 @@ const FilteredEventsPage = () => {
             </>
         );
     }
-
+    const [year, month] = yearMonth!;
     const date = new Date(+year, +month - 1);
 
     return (
         <>
-                <ResultsTitle date={date} />
-            <EventList items={filteredEvents} />
+            <ResultsTitle date={date} />
+            <EventList items={events} />
         </>
     );
 };
 
 export default FilteredEventsPage;
+
+export const getServerSideProps: GetServerSideProps<FilteredPageProps, { slug: [string, string] }> = async (
+    context
+) => {
+    const [year, month] = context.params!.slug;
+    const [numYear, numMonth] = [+year, +month];
+
+    if (isNaN(numYear) || isNaN(numMonth) || context.params!.slug.length > 2 || numMonth > 2030 || numMonth > 12) {
+        return {
+            props: {
+                hasError: true,
+            },
+            //notFound: true,
+            // redirect: {
+            //     destination: '/error'
+            // }
+        };
+    }
+
+    const filteredEvents = await getFilteredEvents({ year: numYear, month: numMonth });
+    return {
+        props: {
+            events: filteredEvents,
+            yearMonth: [numYear, numMonth],
+        },
+    };
+};

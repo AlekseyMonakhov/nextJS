@@ -2,7 +2,7 @@ import EventList from '../components/events/event-list';
 import { GetStaticProps } from 'next';
 import { PostEvent } from '../../types';
 import { FC } from 'react';
-import getAllEvents from '../API/getAllEvents';
+import { getFeaturedEvents } from '../API/getAllEvents';
 
 const HomePage: FC<{ events: PostEvent[] }> = ({ events }) => {
     return (
@@ -13,20 +13,13 @@ const HomePage: FC<{ events: PostEvent[] }> = ({ events }) => {
 };
 
 export const getStaticProps: GetStaticProps<{ events: PostEvent[] }> = async () => {
-    const events = await getAllEvents();
-
-    if (!events) {
-        return {
-            notFound: true,
-        };
-    }
-    const filteredEvents = events.filter((ev) => ev.isFeatured);
+    const filteredEvents = await getFeaturedEvents();
 
     return {
         props: {
             events: filteredEvents,
         },
-        revalidate: 100,
+        revalidate: 1800,
     };
 };
 
