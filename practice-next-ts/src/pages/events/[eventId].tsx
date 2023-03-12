@@ -5,6 +5,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import { getEventById, getFeaturedEvents } from '@/API/getAllEvents';
 import { PostEvent } from '../../../types';
 import { FC } from 'react';
+import Head from 'next/head';
 
 const EventPage: FC<{ loadedEvent: PostEvent }> = ({ loadedEvent }) => {
     if (!loadedEvent) {
@@ -17,6 +18,10 @@ const EventPage: FC<{ loadedEvent: PostEvent }> = ({ loadedEvent }) => {
 
     return (
         <>
+            <Head>
+                <title>{loadedEvent.title}</title>
+                <meta name="description" content={"Find a lot of events there"}/>
+            </Head>
             <EventSummary title={loadedEvent.title} />
             <EventLogistics
                 date={loadedEvent.date}

@@ -5,6 +5,7 @@ import { GetStaticProps } from 'next';
 import { getAllEvents } from '@/API/getAllEvents';
 import { PostEvent } from '../../../types';
 import { FC } from 'react';
+import Head from 'next/head';
 
 const AllEventsPage: FC<{ events: PostEvent[] }> = ({ events }) => {
     const { push } = useRouter();
@@ -20,6 +21,10 @@ const AllEventsPage: FC<{ events: PostEvent[] }> = ({ events }) => {
 
     return (
         <>
+            <Head>
+                <title>All Events</title>
+                <meta name="description" content={"Find a lot of events there"}/>
+            </Head>
             <EventsSearch onSearch={findEventsHandler} />
             <EventList items={events} />
         </>

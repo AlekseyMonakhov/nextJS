@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import { getFilteredEvents } from '../../../src/API/getAllEvents';
 import EventList from '../../components/events/event-list';
 import ResultsTitle from '../../components/events/results-title';
@@ -7,6 +6,7 @@ import ErrorAlert from '@/components/ui/error-alert';
 import { GetServerSideProps } from 'next';
 import { FC } from 'react';
 import { PostEvent } from '../../../types';
+import Head from 'next/head';
 
 type FilteredPageProps = {
     hasError?: boolean;
@@ -14,22 +14,8 @@ type FilteredPageProps = {
     yearMonth?: [number, number];
 };
 
-const FilteredEventsPage: FC<FilteredPageProps> = ({ hasError, events,yearMonth }) => {
-
-    if (hasError) {
-        return (
-            <>
-                <ErrorAlert>
-                    <p>Invalid filter</p>
-                </ErrorAlert>
-                <div className={'center'}>
-                    <Button link={'/events'}>Show All Events</Button>
-                </div>
-            </>
-        );
-    }
-
-    if (!events || events.length === 0) {
+const FilteredEventsPage: FC<FilteredPageProps> = ({ hasError, events, yearMonth }) => {
+    if (!events || events.length === 0 || !yearMonth || !yearMonth.length) {
         return (
             <>
                 <ErrorAlert>
@@ -41,11 +27,34 @@ const FilteredEventsPage: FC<FilteredPageProps> = ({ hasError, events,yearMonth 
             </>
         );
     }
-    const [year, month] = yearMonth!;
+    const [year, month] = yearMonth;
+
+    const pageHeadData = (
+        <Head>
+            <title>Filtered Events</title>
+            <meta name="description" content={`ALl events for ${year}/${month}`} />
+        </Head>
+    );
+
+    if (hasError) {
+        return (
+            <>
+                {pageHeadData}
+                <ErrorAlert>
+                    <p>Invalid filter</p>
+                </ErrorAlert>
+                <div className={'center'}>
+                    <Button link={'/events'}>Show All Events</Button>
+                </div>
+            </>
+        );
+    }
+
     const date = new Date(+year, +month - 1);
 
     return (
         <>
+            {pageHeadData}
             <ResultsTitle date={date} />
             <EventList items={events} />
         </>
