@@ -1,4 +1,4 @@
-import { getFilteredEvents } from '../../../src/API/getAllEvents';
+import { getFilteredEvents } from '../../helpers/getAllEvents';
 import EventList from '../../components/events/event-list';
 import ResultsTitle from '../../components/events/results-title';
 import Button from '../../components/ui/button';

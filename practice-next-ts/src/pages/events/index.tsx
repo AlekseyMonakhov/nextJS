@@ -2,7 +2,7 @@ import EventList from '../../components/events/event-list';
 import EventsSearch from '../../components/events/events-search';
 import { useRouter } from 'next/router';
 import { GetStaticProps } from 'next';
-import { getAllEvents } from '@/API/getAllEvents';
+import { getAllEvents } from '@/helpers/getAllEvents';
 import { PostEvent } from '../../../types';
 import { FC } from 'react';
 import Head from 'next/head';

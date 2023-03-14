@@ -2,8 +2,9 @@ import EventList from '../components/events/event-list';
 import { GetStaticProps } from 'next';
 import { PostEvent } from '../../types';
 import { FC } from 'react';
-import { getFeaturedEvents } from '../API/getAllEvents';
+import { getFeaturedEvents } from '../helpers/getAllEvents';
 import Head from 'next/head';
+import NewsletterRegistration from '@/components/input/newsletter-registration';
 
 const HomePage: FC<{ events: PostEvent[] }> = ({ events }) => {
     return (
@@ -12,6 +13,7 @@ const HomePage: FC<{ events: PostEvent[] }> = ({ events }) => {
                 <title>NextJS Events</title>
                 <meta name="description" content={"Find a lot of events there"}/>
             </Head>
+            <NewsletterRegistration/>
             <EventList items={events} />
         </div>
     );

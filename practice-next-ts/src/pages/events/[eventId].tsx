@@ -2,10 +2,11 @@ import EventSummary from '../../components/event-detail/event-summary';
 import EventLogistics from '../../components/event-detail/event-logistics';
 import EventContent from '../../components/event-detail/event-content';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { getEventById, getFeaturedEvents } from '@/API/getAllEvents';
+import { getAllEvents, getEventById, getFeaturedEvents } from '@/helpers/getAllEvents';
 import { PostEvent } from '../../../types';
 import { FC } from 'react';
 import Head from 'next/head';
+import Comments from '@/components/input/comments';
 
 const EventPage: FC<{ loadedEvent: PostEvent }> = ({ loadedEvent }) => {
     if (!loadedEvent) {
@@ -32,6 +33,7 @@ const EventPage: FC<{ loadedEvent: PostEvent }> = ({ loadedEvent }) => {
             <EventContent>
                 <p>{loadedEvent.description}</p>
             </EventContent>
+            <Comments eventId={loadedEvent.id}/>
         </>
     );
 };
@@ -59,7 +61,7 @@ export const getStaticProps: GetStaticProps<{ loadedEvent: PostEvent }> = async 
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    const events = await getFeaturedEvents();
+    const events = await getAllEvents();
     const eventsPaths = events.map((ev) => ({ params: { eventId: ev.id } }));
 
     return {
