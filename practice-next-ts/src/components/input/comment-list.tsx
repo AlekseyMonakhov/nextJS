@@ -5,7 +5,7 @@ function CommentList({items}: {items:MyComment[] | undefined}) {
     return (
         <ul className={classes.comments}>
             {items?.map((el) => (
-                <li key={el.id}>
+                <li key={el._id}>
                     <p>{el.message}</p>
                     <div>
                         By <address>{el.name}</address>

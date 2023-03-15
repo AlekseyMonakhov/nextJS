@@ -23,7 +23,7 @@ const AllEventsPage: FC<{ events: PostEvent[] }> = ({ events }) => {
         <>
             <Head>
                 <title>All Events</title>
-                <meta name="description" content={"Find a lot of events there"}/>
+                <meta name="description" content={"Find a lot of events there"} />
             </Head>
             <EventsSearch onSearch={findEventsHandler} />
             <EventList items={events} />

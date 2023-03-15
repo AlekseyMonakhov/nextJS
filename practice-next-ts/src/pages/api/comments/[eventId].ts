@@ -1,29 +1,52 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { connectDatabase, getAllDocuments, insertDocument, MyComment } from '@/helpers/db-util';
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { eventId } = <{ eventId: string }>req.query;
+
+    let client;
+    try {
+        client = await connectDatabase();
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to connect Server' });
+        return;
+    }
+
+    const db = client.db('events');
+
     if (req.method === 'POST') {
         const { email, message, name } = <{ name: string; email: string; message: string }>req.body;
 
         if (!email.includes('@') || !name || name.trim() === '' || !message || message.trim() === '') {
             res.status(422).json({ message: 'failed validation' });
+            client.close();
             return;
         }
-        const comment = {
-            id: new Date().toISOString(),
+        const comment: MyComment = {
             name,
             email,
             message,
+            eventId,
         };
-        res.status(201).json({ message: 'created', comment });
-        return;
+
+        try {
+            const result = await insertDocument(client, 'events', 'comments', comment);
+            comment._id = result.insertedId;
+
+            res.status(201).json({ message: 'created', comment });
+        } catch (err) {
+            res.status(500).json({ message: 'Failed to insert Doc' });
+        }
     }
     if (req.method === 'GET') {
-        const list = [
-            { id: 'id', name: 'alex', message: 'some message' },
-            { id: 'id1', name: 'alex', message: 'some message' },
-            { id: 'id2', name: 'alex', message: 'some message' },
-        ];
-        res.status(200).json({ comments: list });
+        try {
+            const documents = await getAllDocuments(client, 'events', 'comments', { _id: -1 });
+
+            res.status(200).json({ comments: documents });
+        } catch (err) {
+            res.status(500).json({ message: 'Failed to get docs' });
+        }
     }
+
+    client.close();
 }

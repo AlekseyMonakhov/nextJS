@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { MongoClient } from 'mongodb';
+import { connectDatabase, insertDocument } from '@/helpers/db-util';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
@@ -9,14 +9,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             res.status(422).json({ message: 'invalid email' });
             return;
         }
+        let client;
 
-        const client = await MongoClient.connect(
-            'mongodb+srv://nextjscourse:nextjscourse@cluster0.xobvpxp.mongodb.net/?retryWrites=true&w=majority'
-        );
-        const db = client.db('newsletter');
-        await db.collection('emails').insertOne({ email: email });
+        try {
+            client = await connectDatabase();
+        } catch (err) {
+            return res.status(500).json({ message: 'Connecting to database failed' });
+        }
 
-        client.close();
+        try {
+            await insertDocument(client, 'newsletter', 'emails', { email: email });
+            client.close();
+        } catch (err) {
+            return res.status(500).json({ message: 'Inserting data failed' });
+        }
 
         res.status(201).json({ message: 'Signed up' });
     }

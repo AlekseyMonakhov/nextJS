@@ -11,9 +11,9 @@ const HomePage: FC<{ events: PostEvent[] }> = ({ events }) => {
         <div>
             <Head>
                 <title>NextJS Events</title>
-                <meta name="description" content={"Find a lot of events there"}/>
+                <meta name="description" content={"Find a lot of events there"} />
             </Head>
-            <NewsletterRegistration/>
+            <NewsletterRegistration />
             <EventList items={events} />
         </div>
     );

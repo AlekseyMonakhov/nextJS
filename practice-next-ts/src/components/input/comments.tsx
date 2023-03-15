@@ -13,17 +13,19 @@ export interface MyComment {
     email?: string;
     id?: string;
     message: string;
+    _id?: string;
 }
 
 function Comments({ eventId }: Props) {
     const [showComments, setShowComments] = useState(false);
     const [comments, setComments] = useState<MyComment[]>();
-
+    
     useEffect(() => {
         if (!showComments) {
             fetch('/api/comments/' + eventId)
                 .then((res) => res.json())
                 .then((res) => {
+                    console.log(res);
                     setComments(res.comments)
                 })
                 .catch((err) => {
@@ -35,7 +37,7 @@ function Comments({ eventId }: Props) {
     function toggleCommentsHandler() {
         setShowComments((prevStatus) => !prevStatus);
     }
-
+    
     function addCommentHandler(commentData: MyComment) {
         fetch('/api/comments/' + eventId, {
             method: 'POST',
