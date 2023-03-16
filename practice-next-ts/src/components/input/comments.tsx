@@ -21,17 +21,20 @@ function Comments({ eventId }: Props) {
     const [showComments, setShowComments] = useState(false);
     const [comments, setComments] = useState<MyComment[]>();
     const { hideNotification, showNotification, notification } = useContext(NotificationContext);
-
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         if (!showComments) {
+            setLoading(true);
             fetch('/api/comments/' + eventId)
                 .then((res) => res.json())
                 .then((res) => {
                     console.log(res);
                     setComments(res.comments);
+                    setLoading(false);
                 })
                 .catch((err) => {
                     console.log(err);
+                    setLoading(false);
                 });
         }
     }, [showComments]);
@@ -41,6 +44,7 @@ function Comments({ eventId }: Props) {
     }
 
     function addCommentHandler(commentData: MyComment) {
+        setLoading(true);
         showNotification({
             title: 'Adding',
             message: 'Adding comment',
@@ -67,6 +71,7 @@ function Comments({ eventId }: Props) {
                     message: 'Registering',
                     status: 'success',
                 });
+                setLoading(false);
             })
             .catch((err) => {
                 showNotification({
@@ -74,6 +79,7 @@ function Comments({ eventId }: Props) {
                     message: err.message ?? 'some error',
                     status: 'error',
                 });
+                setLoading(false);
             });
     }
 
@@ -83,11 +89,8 @@ function Comments({ eventId }: Props) {
                 {showComments ? 'Hide' : 'Show'} Comments
             </button>
             {showComments && <NewComment onAddComment={addCommentHandler} />}
-            {showComments && notification?.status === 'pending' ? (
-                <p>Loading....</p>
-            ) : (
-                <CommentList items={comments} />
-            )}
+            {showComments && !loading && <CommentList items={comments} />}
+            {showComments && loading && <p>Loading...</p>}
         </section>
     );
 }
