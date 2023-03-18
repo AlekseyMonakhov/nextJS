@@ -7,14 +7,7 @@ import AddressIcon from '../icons/address-icon';
 import ArrowRightIcon from '../icons/arrow-right-icon';
 import Image from 'next/image';
 
-const EventItem: FC<PostEvent> = ({
-                                      title,
-                                      id,
-                                      image,
-                                      date,
-                                      location,
-                                      description,
-                                  }) => {
+const EventItem: FC<PostEvent> = ({ title, id, image, date, location, description }) => {
     const updatedDate = new Date(date).toLocaleDateString('en-US', {
         day: 'numeric',
         month: 'long',
@@ -27,7 +20,7 @@ const EventItem: FC<PostEvent> = ({
 
     return (
         <li className={classes.item}>
-            <Image src={'/' + image} alt={title} width={250} height={160}/>
+            <Image src={'/' + image} alt={title} width={250} height={160} />
             <div className={classes.content}>
                 <div className={classes.summary}>
                     <h2>{title}</h2>
