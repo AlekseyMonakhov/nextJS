@@ -10,10 +10,9 @@ const Hero = () => {
                     alt={'Image showing Aleksey'}
                     width={300}
                     height={300}
-
                 />
             </div>
-            <h1>Hi, I'm Alex</h1>
+            <h1>Hi, Im Alex</h1>
             <p>This is my testing next js project</p>
         </section>
     );

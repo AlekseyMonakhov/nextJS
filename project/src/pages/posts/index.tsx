@@ -1,41 +1,32 @@
 import AllPosts from '@/components/posts/all-posts';
-import { Post } from '@/types';
-
-const DUMMY_POSTS: Post[] = [
-    {
-        slug: 'getting-started-next-js',
-        title: 'getting started with next js',
-        image: 'getting-started-nextjs.png',
-        excerpt: 'NextJs is React framework',
-        date: '2022-02-10',
-    },
-    {
-        slug: 'getting-started-next-js2',
-        title: 'getting started with next js',
-        image: 'getting-started-nextjs.png',
-        excerpt: 'NextJs is React framework',
-        date: '2022-02-10',
-    },
-    {
-        slug: 'getting-started-next-js3',
-        title: 'getting started with next js',
-        image: 'getting-started-nextjs.png',
-        excerpt: 'NextJs is React framework',
-        date: '2022-02-10',
-    },
-    {
-        slug: 'getting-started-next-js4',
-        title: 'getting started with next js',
-        image: 'getting-started-nextjs.png',
-        excerpt: 'NextJs is React framework',
-        date: '2022-02-10',
-    },
-];
+import { FeaturePost } from '@/types';
+import { GetStaticProps } from 'next';
+import { getAllPosts } from '../../../lib/posts-util';
+import Head from 'next/head';
 
 type Props = {
-    posts: Post[];
+    posts: FeaturePost[];
 };
 
+
 export default function AllPostsPage({ posts }: Props) {
-    return <AllPosts posts={DUMMY_POSTS} />;
+    return (
+        <>
+            <Head>
+                <meta name={'description'} content={'all posts page'}/>
+                <title>All posts</title>
+            </Head>
+            <AllPosts posts={posts} />
+        </>
+    );
 }
+
+export const getStaticProps: GetStaticProps<{ posts: FeaturePost[] }> = () => {
+    const posts = getAllPosts();
+
+    return {
+        props: {
+            posts,
+        },
+    };
+};

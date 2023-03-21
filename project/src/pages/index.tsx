@@ -1,43 +1,35 @@
 import Hero from '@/components/home-page/hero';
+import { FeaturePost } from '@/types';
+import { GetStaticProps } from 'next';
+import { getFeaturedPosts } from '../../lib/posts-util';
 import FeaturedPosts from '@/components/home-page/featured-posts';
-import { Post } from '@/types';
+import Head from 'next/head';
 
-const DUMMY_POSTS: Post[] = [
-    {
-        slug: 'getting-started-next-js',
-        title: 'getting started with next js',
-        image: 'getting-started-nextjs.png',
-        excerpt: 'NextJs is React framework',
-        date: '2022-02-10',
-    },
-    {
-        slug: 'getting-started-next-js2',
-        title: 'getting started with next js',
-        image: 'getting-started-nextjs.png',
-        excerpt: 'NextJs is React framework',
-        date: '2022-02-10',
-    },
-    {
-        slug: 'getting-started-next-js3',
-        title: 'getting started with next js',
-        image: 'getting-started-nextjs.png',
-        excerpt: 'NextJs is React framework',
-        date: '2022-02-10',
-    },
-    {
-        slug: 'getting-started-next-js4',
-        title: 'getting started with next js',
-        image: 'getting-started-nextjs.png',
-        excerpt: 'NextJs is React framework',
-        date: '2022-02-10',
-    },
-];
+type Props = {
+    featuredPostsArr: FeaturePost[];
+};
 
-export default function Home() {
+export default function Home({ featuredPostsArr }: Props) {
     return (
         <>
+            <Head>
+                <title>Welcome to my blog</title>
+                <meta name={'description'} content={'i post about programming'} />
+            </Head>
             <Hero />
-            <FeaturedPosts posts={DUMMY_POSTS} />
+            <FeaturedPosts posts={featuredPostsArr} />
         </>
     );
 }
+
+export const getStaticProps: GetStaticProps<{ featuredPostsArr: FeaturePost[] }> = async (
+    context
+) => {
+    const featuredPostsArr = getFeaturedPosts();
+    return {
+        props: {
+            featuredPostsArr,
+        },
+        revalidate: 1000,
+    };
+};
