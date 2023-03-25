@@ -8,7 +8,7 @@ import { FC } from 'react';
 import Head from 'next/head';
 import Comments from '@/components/input/comments';
 
-const EventPage: FC<{ loadedEvent: PostEvent }> = ({ loadedEvent }) => {
+const EventPage: FC<{ loadedEvent: PostEvent | undefined }> = ({ loadedEvent }) => {
     if (!loadedEvent) {
         return (
             <div className={'center'}>
@@ -61,7 +61,7 @@ export const getStaticProps: GetStaticProps<{ loadedEvent: PostEvent }> = async 
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    const events = await getAllEvents();
+    const events = await getFeaturedEvents();
     const eventsPaths = events.map((ev) => ({ params: { eventId: ev.id } }));
 
     return {
